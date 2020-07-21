@@ -1,3 +1,8 @@
+package ui;
+
+import ui.FormEvent;
+import ui.FormListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -69,9 +74,9 @@ public class FormPanel extends JPanel {
     /// setup listbox
         ageList = new JList();
         DefaultListModel ageModel = new DefaultListModel();
-        ageModel.addElement(new AgeCategory(0, "Under 18"));
-        ageModel.addElement(new AgeCategory(1, "from 18 to 65"));
-        ageModel.addElement(new AgeCategory(2, "over 65"));
+        ageModel.addElement("Under 18");
+        ageModel.addElement("from 18 to 65");
+        ageModel.addElement("over 65");
         ageList.setModel(ageModel);
         ageList.setPreferredSize(new Dimension(90, 70));
         ageList.setBorder(BorderFactory.createEtchedBorder());
@@ -94,14 +99,14 @@ public class FormPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String occupation = occupationField.getText();
-                AgeCategory ageCat = (AgeCategory) ageList.getSelectedValue();
+                int ageCat = ageList.getSelectedIndex();
                 String empCat = (String) empCombo.getSelectedItem();
                 String taxId = taxField.getText();
                 boolean usCitizen = citizenCheck.isSelected();
                 String gender = genderGrpup.getSelection().getActionCommand();
 
                 FormEvent ev = new FormEvent(this, name, occupation,
-                        ageCat.getId(), empCat, taxId, usCitizen, gender);
+                        ageCat, empCat, taxId, usCitizen, gender);
                 if (formListener != null) {
                     formListener.formEventOccurred(ev);
                 }

@@ -1,5 +1,8 @@
+package ui;
+
+import controller.Controller;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +14,7 @@ public class MainFrame extends JFrame {
     private ToolBar toolBar;
     private FormPanel formPanel;
     private JFileChooser fileChooser;
+    private Controller controller;
 
     public MainFrame() {
         super("Hello Swing");
@@ -34,17 +38,7 @@ public class MainFrame extends JFrame {
         formPanel.setFormListener(new FormListener() {
             @Override
             public void formEventOccurred(FormEvent ev) {
-                String name = ev.getName();
-                String occupation = ev.getOccupation();
-                int ageCat = ev.getAgeCategory();
-                String empCat = ev.getEmpCategory();
-                String taxId = ev.getTaxId();
-                boolean usCitizen = ev.isUsCitizen();
-                String gender = ev.getGender();
-
-                textPanel.appendText(name + " : " + occupation + ": " + ageCat
-                        + ": " + empCat + ": " + taxId + ": " + usCitizen + "\n");
-                System.out.println(gender);
+                controller.addPerson(ev);
             }
         });
 

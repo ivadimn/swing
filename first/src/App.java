@@ -1,3 +1,5 @@
+import ui.MainFrame;
+
 import javax.swing.*;
 
 public class App {

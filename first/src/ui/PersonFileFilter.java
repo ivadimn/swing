@@ -1,3 +1,7 @@
+package ui;
+
+import common.Utils;
+
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 

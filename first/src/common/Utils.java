@@ -1,3 +1,5 @@
+package common;
+
 public class Utils {
     public static String getFileExtension(String name) {
 
