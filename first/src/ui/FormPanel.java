@@ -74,7 +74,7 @@ public class FormPanel extends JPanel {
     /// setup listbox
         ageList = new JList();
         DefaultListModel ageModel = new DefaultListModel();
-        ageModel.addElement("Under 18");
+        ageModel.addElement("under 18");
         ageModel.addElement("from 18 to 65");
         ageModel.addElement("over 65");
         ageList.setModel(ageModel);

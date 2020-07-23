@@ -1,6 +1,8 @@
 package model;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
 
     private static int count = 0;
 
@@ -25,6 +27,10 @@ public class Person {
         this.gender = gender;
         this.id = count;
         count++;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

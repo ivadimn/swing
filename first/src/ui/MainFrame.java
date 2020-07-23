@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame {
     private FormPanel formPanel;
     private JFileChooser fileChooser;
     private Controller controller;
+    private TablePanel tablePanel;
 
     public MainFrame() {
         super("Hello Swing");
@@ -25,6 +27,10 @@ public class MainFrame extends JFrame {
         toolBar = new ToolBar();
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new PersonFileFilter());
+        controller = new Controller();
+        tablePanel = new TablePanel();
+
+        tablePanel.setData(controller.getPeople());
 
         setJMenuBar(createMenuBar());
 
@@ -39,12 +45,13 @@ public class MainFrame extends JFrame {
             @Override
             public void formEventOccurred(FormEvent ev) {
                 controller.addPerson(ev);
+                tablePanel.refresh();
             }
         });
 
         add(formPanel, BorderLayout.WEST);
         add(toolBar, BorderLayout.NORTH);
-        add(textPanel, BorderLayout.CENTER);
+        add(tablePanel, BorderLayout.CENTER);
 
         setSize(600, 500);
         setMinimumSize(new Dimension(500, 400));
@@ -69,7 +76,14 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                    System.out.println(fileChooser.getSelectedFile());
+                    try {
+                        controller.loadFromFile(fileChooser.getSelectedFile());
+                        tablePanel.refresh();
+                    } catch (IOException ioException) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "Could not load data from file.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -78,7 +92,13 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-                    System.out.println(fileChooser.getSelectedFile());
+                    try {
+                        controller.saveToFile(fileChooser.getSelectedFile());
+                    } catch (IOException ioException) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "Could not save data to file.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -107,11 +127,6 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String text = JOptionPane.showInputDialog(MainFrame.this,
-                        "Enter your user name", "Enter user name",
-                        JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-
-                System.out.println(text);
                 int action = JOptionPane.showConfirmDialog(MainFrame.this,
                         "Do you really want to exit the application",
                         "Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
