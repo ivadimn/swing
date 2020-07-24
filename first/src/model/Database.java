@@ -1,23 +1,25 @@
 package model;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Database {
-    private ArrayList<Person> people;
+    private List<Person> people;
 
     public Database() {
-        this.people = new ArrayList<>();
+        this.people = new LinkedList<>();
     }
 
     public void addPerson(Person person) {
         this.people.add(person);
     }
 
+    public void removePerson(int index) {
+        people.remove(index);
+    }
+
     public List<Person> getPeople() {
-        return people;
+        return Collections.unmodifiableList(people);
     }
 
     public void  saveToFile(File file) throws IOException {

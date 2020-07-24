@@ -59,6 +59,9 @@ public class Controller {
         db.addPerson(person);
 
     }
+    public void removePerson(int index) {
+        db.removePerson(index);
+    }
 
     public List<Person> getPeople() {
         return db.getPeople();

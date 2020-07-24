@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
     private JFileChooser fileChooser;
     private Controller controller;
     private TablePanel tablePanel;
+    private PrefsDialog prefsDialog;
 
     public MainFrame() {
         super("Hello Swing");
@@ -29,8 +30,15 @@ public class MainFrame extends JFrame {
         fileChooser.setFileFilter(new PersonFileFilter());
         controller = new Controller();
         tablePanel = new TablePanel();
+        prefsDialog = new PrefsDialog(MainFrame.this);
 
         tablePanel.setData(controller.getPeople());
+
+        tablePanel.addPersonTableListener(new PersonTableListener() {
+            public void rowDeleted(int row) {
+                controller.removePerson(row);
+            }
+        });
 
         setJMenuBar(createMenuBar());
 
@@ -111,6 +119,16 @@ public class MainFrame extends JFrame {
         showMenu.add(showFormItem);
         windowMenu.add(showMenu);
 
+        JMenuItem prefsMenuItem = new JMenuItem("Preferences ...");
+        windowMenu.add(prefsMenuItem);
+
+        prefsMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                prefsDialog.setVisible(true);
+            }
+        });
+
         showFormItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,6 +140,10 @@ public class MainFrame extends JFrame {
         fileMenu.setMnemonic(KeyEvent.VK_F);
         exitItem.setMnemonic(KeyEvent.VK_X);
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+
+        importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
+        exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+
 
         exitItem.addActionListener(new ActionListener() {
             @Override
