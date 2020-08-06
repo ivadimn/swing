@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class MainFrame extends JFrame {
 
@@ -18,6 +19,7 @@ public class MainFrame extends JFrame {
     private Controller controller;
     private TablePanel tablePanel;
     private PrefsDialog prefsDialog;
+    private Preferences prefs;
 
     public MainFrame() {
         super("Hello Swing");
@@ -31,6 +33,7 @@ public class MainFrame extends JFrame {
         controller = new Controller();
         tablePanel = new TablePanel();
         prefsDialog = new PrefsDialog(MainFrame.this);
+        prefs = Preferences.userRoot().node("db");
 
         tablePanel.setData(controller.getPeople());
 
@@ -57,6 +60,21 @@ public class MainFrame extends JFrame {
             }
         });
 
+        prefsDialog.setPrefsListener(new PrefsListener() {
+            @Override
+            public void preferencesSet(String user, String passw, int port) {
+                System.out.println(user + ": " + passw + " - " + port);
+                prefs.put("user", user);
+                prefs.put("password", passw);
+                prefs.putInt("port", port);
+            }
+        });
+
+        String user = prefs.get("user", "");
+        String password = prefs.get("password", "");
+        int port = prefs.getInt("port" ,3306);
+        prefsDialog.setDefaults(user, password, port);
+
         add(formPanel, BorderLayout.WEST);
         add(toolBar, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.CENTER);
@@ -64,6 +82,7 @@ public class MainFrame extends JFrame {
         setSize(600, 500);
         setMinimumSize(new Dimension(500, 400));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationByPlatform(true);
         setVisible(true);
     }
 
@@ -128,6 +147,7 @@ public class MainFrame extends JFrame {
                 prefsDialog.setVisible(true);
             }
         });
+        prefsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 
         showFormItem.addActionListener(new ActionListener() {
             @Override
